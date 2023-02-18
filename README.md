@@ -35,4 +35,4 @@ a folder with results and intermediate processing step files for each recording.
 
 Copyright 2018-2022 Apostolos Mikroulis, Eliška Waloschková.
 
-This software is provided under the zlib license.
+This software is provided under terms of the zlib license.
