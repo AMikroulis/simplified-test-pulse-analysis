@@ -16,6 +16,7 @@ For HEKA files:<br/>
 
 <br/><br/>
 Operation <br/>
+
 0. select the file type (HEKA/Axon)
 1. click Scan
 2. select the folder with the recordings
