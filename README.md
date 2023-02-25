@@ -14,6 +14,25 @@ For HEKA files:<br/>
             A folder with .dat files, and their corresponding .inf files
                         (you get the .inf file from PatchMaster Replay menu)
 
+<br/>
+A negative-going test pulse in voltage-clamp and at a sampling rate of at least 10 kHz is expected. 
+If your protocol is different, you can change the fitting parameters in the <i>tp.py</i> file.
+<bs/>Reaching the steady-state by the end of the pulse is essential for the analysis.
+<br/>
+The test pulse results include the following, for the median sweep and for individual sweeps:
+<br/>- estimated resting membrane potential (RMP)
+<br/>- estimated input resistance including the series resistance (Rin)
+<br/>- estimated series resistance (Rs)
+<br/>- estimated capacitance (Cm)
+
+For the inward/outward currents, the following are calculated for every voltage step:
+<br/>- positive peak amplitude
+<br/>- negative peak amplitude
+<br/>- baseline current (steady-state)
+<br/>- Na current estimate
+<br/>- fast K current estimate
+<br/>- slow K current estimate
+
 <br/><br/>
 Operation <br/>
 
