@@ -35,10 +35,10 @@ class mwin(qtw.QMainWindow):
         self.mwinui.HEKAfmt.setDisabled(False)
         self.mwinui.ABFfmt.setDisabled(False)
         
-        #not yet implemented:
         self.mwinui.iclamptp.setDisabled(True)
         self.mwinui.io_switch.setDisabled(False)
         self.mwinui.tab_3.setDisabled(False)
+        self.mwinui.tab_4.setDisabled(True)
         
         self.template_file = ''
         self.template_file_2 = ''
@@ -154,6 +154,22 @@ class mwin(qtw.QMainWindow):
         for i in selected_ci:
             selected_c.append(i.text())
         return(selected_c)
+
+    def get_start_of_testpulse(self):
+        start_of_tp = self.mwinui.stepstartbox.value()
+        return(start_of_tp)
+    
+    def get_end_of_testpulse(self):
+        end_of_tp = self.mwinui.stependbox.value()
+        return(end_of_tp)
+    
+    def get_start_of_io(self):
+        start_of_io = self.mwinui.stepstartbox_2.value()
+        return(start_of_io)
+    
+    def get_end_of_io(self):
+        end_of_io = self.mwinui.stependbox_2.value()
+        return(end_of_io)
 
     def notch(self):
         selected_freqs = [False, False, False, False, False]

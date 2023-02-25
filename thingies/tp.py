@@ -63,18 +63,6 @@ def openthesegment(segmentV, segmentI, segmentname, segmentrecnumber, outputfold
         plt.xlabel('time (s)')
         plt.ylabel('voltage command (mV)')
         plt.savefig(segmentname+'_V.png')
-        #plt.show()
-  
-    fscI = npy.convolve(scI, fir, 'valid')
-    # plt.clf()
-    # plt.plot(fscI, color = '#402060')
-    # plt.title('400Hz low-pass')
-    # plt.xlabel('time (samples)')
-    # plt.ylabel('current (pA)')
-    # plt.savefig(segmentname+'_filtered.png')
-    # #plt.show()
-    
-    int_fscI = npy.round(fscI/3.1250000e-1, 0).astype('int16')
 
     # abf pad crop:
     crop = 0
@@ -147,12 +135,11 @@ def openthesegment(segmentV, segmentI, segmentname, segmentrecnumber, outputfold
         t_ = t_ - 0
         return (x[0] * npy.exp(-t_/x[1]) + x[2] + x[3]* npy.exp(-t_/x[4]) - observed)
     plt.clf()
-    LS_res1 = least_squares(fitf, x0 =[-200,30,-200,-200,0.1], args = (segmenttimeres*npy.arange(2, 0.8*(end_point_adjusted-start_point_adjusted)+2), scI_med[start_point_adjusted + 2 : int(npy.round((start_of_testpulse + 0.8*(end_of_testpulse - start_of_testpulse)) /(1000.* segmenttimeres),0))+2]),  ftol = 1e-9, xtol = 1e-8, gtol=1e-8, max_nfev = 80000, jac = '3-point', method = 'trf', loss = 'soft_l1' , bounds=([-2000,0,-10000,-2000,0],[2000,500,10000,2000,0.2]))
+    LS_res1 = least_squares(fitf, x0 =[-200,30,-200,-200,0.1], args = (segmenttimeres*npy.arange(2, 0.8*(end_point_adjusted-start_point_adjusted)+2), scI_med[start_point_adjusted + 2 : int(npy.round((start_of_testpulse + 0.8*(end_of_testpulse - start_of_testpulse)) /(1000.* segmenttimeres),0))+2]),  ftol = 1e-9, xtol = 1e-8, gtol=1e-8, max_nfev = 80000, jac = '3-point', method = 'trf', loss = 'soft_l1' , bounds=([-2000,0,-10000,-2000,0],[2000,500,10000,2000,0.5]))
     lsp = LS_res1.x
 
     tp_0 = lsp[0] * npy.exp(-0/lsp[1]) + lsp[2] + lsp[3]* npy.exp(-0/lsp[4])
     tp_b = npy.median(scI_med[start_point_adjusted -20: start_point_adjusted -1])
-    tp_endlim = lsp[0] * npy.exp(-500 /lsp[1]) + lsp[2] + lsp[3]* npy.exp(-int(npy.round((end_of_testpulse - start_of_testpulse) /(1000.* segmenttimeres),0))/lsp[4])
     tp_tau1 = lsp[1]
     tp_tau2 = lsp[4]
     
@@ -167,7 +154,7 @@ def openthesegment(segmentV, segmentI, segmentname, segmentrecnumber, outputfold
     reporthtml.write('<p> baseline : '+ str(npy.round(lsp[2],2))+ 'pA </p>')
     
     tp_ampl = tp_b - tp_0
-    Rs = npy.abs(0.001*stepV * 1e+6 / tp_ampl)        #### 1e+6  = 1/1e-12 (the pA)  /1e6  (for MOhm)
+    Rs = npy.abs(0.001*stepV * 1e+6 / tp_ampl)        #### 1e+6  = 1/1e-12 (pA)  /1e6  (for MOhm)
     Cq_med = Cq_med1 *((Ri-Rs)/((Ri-Rs)-Rs))
     reporthtml.write('<p> membrane capacitance (charge integration) : '+ str(npy.round(Cq_med,3))+ 'pF </p>')
     plt.plot(-1,Rs,'m*')
@@ -209,7 +196,7 @@ def openthesegment(segmentV, segmentI, segmentname, segmentrecnumber, outputfold
 
 
     for tp_s in range(scI_n):
-        LS_res1 = least_squares(fitf, x0 =[-200,30,-200,-200,0.05], args = (segmenttimeres*npy.arange(2, 0.8*(end_point_adjusted-start_point_adjusted)+2), scI_sweeps[tp_s][start_point_adjusted+2 : int(npy.round((start_of_testpulse + 0.8*(end_of_testpulse - start_of_testpulse)) /(1000.* segmenttimeres),0)) + 2]),   ftol = 1e-9, xtol = 1e-8, gtol=1e-8, max_nfev = 80000, jac = '3-point', method = 'trf', loss = 'soft_l1' , bounds=([-2000,0,-10000,-2000,0],[2000,500,10000,2000,0.2]))
+        LS_res1 = least_squares(fitf, x0 =[-200,30,-200,-200,0.05], args = (segmenttimeres*npy.arange(2, 0.8*(end_point_adjusted-start_point_adjusted)+2), scI_sweeps[tp_s][start_point_adjusted+2 : int(npy.round((start_of_testpulse + 0.8*(end_of_testpulse - start_of_testpulse)) /(1000.* segmenttimeres),0)) + 2]),   ftol = 1e-9, xtol = 1e-8, gtol=1e-8, max_nfev = 80000, jac = '3-point', method = 'trf', loss = 'soft_l1' , bounds=([-2000,0,-10000,-2000,0],[2000,500,10000,2000,0.5]))
         lsp = LS_res1.x
         tp_0 = lsp[0] * npy.exp(-0/lsp[1]) + lsp[2] + lsp[3]* npy.exp(-0/lsp[4])
         tp_b = npy.median(scI_sweeps[tp_s][start_point_adjusted -20: start_point_adjusted -1])
@@ -262,6 +249,12 @@ def main(recfolder, prot_list, ch_list, fir, fir2, fmtselection, window_referenc
             expfiles.append(str(file.path))
             print(len(expfiles))
 
+    try:
+        fallback_start_of_testpulse = float(mwi.get_start_of_testpulse())
+        fallback_end_of_testpulse = float(mwi.get_end_of_testpulse())
+    except:
+        fallback_start_of_testpulse = 100.0
+        fallback_end_of_testpulse = 150.0
 
     currentexpfile = 0
     csshdr = '<style>article.accordion {	display: block;	width: 64000em;	margin: 0 auto;	background-color: #859;	overflow: auto;	border-radius: 12px;	box-shadow: 0 3px 3px rgba(0,0,0,0.3);}article.accordion section{	position: relative;	display: block;	float: left;	width: 2em;	height: 65000em;	margin: 0.5em 0 0.5em 0.5em;	color: #406;	background-color: #406;	overflow: auto;	border-radius: 10px;}article.accordion section h2{	position: absolute;	font-size: 1em;	font-weight: bold;	width: 12em;	height: 2em;	top: 12em;	left: 0;	text-indent: 1em;	padding: 0;	margin: 0;	color: #ddd;	-webkit-transform-origin: 0 0;	-moz-transform-origin: 0 0;	-ms-transform-origin: 0 0;	-o-transform-origin: 0 0;	transform-origin: 0 0;	-webkit-transform: rotate(-90deg);	-moz-transform: rotate(-90deg);	-ms-transform: rotate(-90deg);	-o-transform: rotate(-90deg);	transform: rotate(-90deg);}article.accordion section h2 a{	display: block;	width: 100%;	line-height: 2em;	text-decoration: none;	color: inherit;	outline: 0 none;}article.accordion section:target{	width: 60em;	padding: 0 1em;	color: #333;	background-color: #fff;}article.accordion section:target h2{	position: static;	font-size: 1.3em;	text-indent: 0;	color: #333;	-webkit-transform: rotate(0deg);	-moz-transform: rotate(0deg);	-ms-transform: rotate(0deg);	-o-transform: rotate(0deg);	transform: rotate(0deg);}article.accordion section,article.accordion section h2{	-webkit-transition: all 1s ease;	-moz-transition: all 1s ease;	-ms-transition: all 1s ease;	-o-transition: all 1s ease;	transition: all 1s ease;}</style>'

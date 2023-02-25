@@ -356,5 +356,5 @@ class prots():
 
 
 if __name__ == "__main__":
-    print('Seriously... This is a module. What did you expect to happen?')
+    print('This is a module.')
     pass

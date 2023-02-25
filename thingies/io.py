@@ -152,9 +152,6 @@ def openthesegment(segmentV, segmentI, segmentname, segmentrecnumber, outputfold
 
     iorecfile.close()
 
-    
-    #segmentdataoutput.append(0)
-
     return (steps, Na_currents, K_fast_currents, K_slow_currents, holding_currents, min_currents, max_currents)
 
 def main(recfolder, prot_list, ch_list, fir, fir2, fmtselection, window_reference):
@@ -183,6 +180,12 @@ def main(recfolder, prot_list, ch_list, fir, fir2, fmtselection, window_referenc
             expfiles.append(str(file.path))
             print(len(expfiles))
 
+    try:
+        fallback_start_of_testpulse = float(mwi.get_start_of_io())
+        fallback_end_of_testpulse = float(mwi.get_end_of_io())
+    except:
+        fallback_start_of_testpulse = 100.0
+        fallback_end_of_testpulse = 200.0
 
     currentexpfile = 0
     csshdr = '<style>article.accordion {	display: block;	width: 64000em;	margin: 0 auto;	background-color: #859;	overflow: auto;	border-radius: 12px;	box-shadow: 0 3px 3px rgba(0,0,0,0.3);}article.accordion section{	position: relative;	display: block;	float: left;	width: 2em;	height: 65000em;	margin: 0.5em 0 0.5em 0.5em;	color: #406;	background-color: #406;	overflow: auto;	border-radius: 10px;}article.accordion section h2{	position: absolute;	font-size: 1em;	font-weight: bold;	width: 12em;	height: 2em;	top: 12em;	left: 0;	text-indent: 1em;	padding: 0;	margin: 0;	color: #ddd;	-webkit-transform-origin: 0 0;	-moz-transform-origin: 0 0;	-ms-transform-origin: 0 0;	-o-transform-origin: 0 0;	transform-origin: 0 0;	-webkit-transform: rotate(-90deg);	-moz-transform: rotate(-90deg);	-ms-transform: rotate(-90deg);	-o-transform: rotate(-90deg);	transform: rotate(-90deg);}article.accordion section h2 a{	display: block;	width: 100%;	line-height: 2em;	text-decoration: none;	color: inherit;	outline: 0 none;}article.accordion section:target{	width: 60em;	padding: 0 1em;	color: #333;	background-color: #fff;}article.accordion section:target h2{	position: static;	font-size: 1.3em;	text-indent: 0;	color: #333;	-webkit-transform: rotate(0deg);	-moz-transform: rotate(0deg);	-ms-transform: rotate(0deg);	-o-transform: rotate(0deg);	transform: rotate(0deg);}article.accordion section,article.accordion section h2{	-webkit-transition: all 1s ease;	-moz-transition: all 1s ease;	-ms-transition: all 1s ease;	-o-transition: all 1s ease;	transition: all 1s ease;}</style>'
