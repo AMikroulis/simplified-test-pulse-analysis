@@ -51,7 +51,10 @@ a HTML overview file,
 a CSV file with the tabulated results,
 a folder with results and intermediate processing step files for each recording.
 
+<br/>
+
 
 Copyright 2018-2022 Apostolos Mikroulis, Eliška Waloschková.
+<a href="https://zenodo.org/badge/latestdoi/202560114"><img src="https://zenodo.org/badge/202560114.svg" alt="DOI"></a>
 
 This software is provided under terms of the zlib license.
